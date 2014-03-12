@@ -1,11 +1,12 @@
 // john whitney inspired harmonic progression
 // by Bruce Lott, march 2014
 
-// doge
-
-// import OSC libraries
+// osc
 import oscP5.*;
 import netP5.*;
+// opengl
+import processing.opengl.*;
+import javax.media.opengl.GL2;
 
 OscP5 oscP5;
 
@@ -20,12 +21,15 @@ float minNum = 0.2;   // slowest/smallest circle
 float maxNum = 10;    // fastest/biggest circle
 float cWeight = 0.75; // circles stroke weight
 float ech = 0.1;      // amount of visual echo
-float bgHue = 0.4;    //
+float bgHue = 0.4;    // background hue
+float centHue = 0.2;// center circle hue
+float circFillHue = 0.5;
+float circFillOp = 0.1;
 
 void setup(){
    size(500, 500, P2D);
    if(frame!=null) frame.setResizable(true);
-   else size(displayWidth, displayHeight, P2D);
+   else size(displayWidth, displayHeight, OPENGL);
    colorMode(HSB, 1.0);
    oscP5 = new OscP5(this,12000);
 }
@@ -40,15 +44,17 @@ void draw(){
   fill(color(bgHue, 0.4, 0.7, ech));  
   noStroke(); 
   rect(0,0,width,height);
-  
   translate(width/2.0, height/2.0);
   stroke(0);
-  fill(color(0.2, 0.4, 0.7));
+  
+  // center circle
+  fill(color(centHue, 0.4, 0.7));
   ellipse(0, 0, szScale*(width/2.0), szScale*(width/2.0));
   
   // draw the circles
   noFill();
   for(float i=minNum; i<maxNum; i=i+0.1){
+    fill(color((circFillHue*rads)%1.0, 0.4, 0.5, circFillOp));
     ellipse(cos(rads*i*szScale)*100, sin(rads*i*szScale)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
   }
 }
