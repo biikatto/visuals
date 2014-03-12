@@ -4,9 +4,6 @@
 // osc
 import oscP5.*;
 import netP5.*;
-// opengl
-import processing.opengl.*;
-import javax.media.opengl.GL2;
 
 OscP5 oscP5;
 
@@ -24,15 +21,12 @@ float ech = 0.1;      // amount of visual echo
 float bgHue = 0.4;    // background hue
 float centHue = 0.2;// center circle hue
 float circFillHue = 0.5;
-float circFillOp = 0.1;
+float circFillOp = 0.2;
 
 void setup(){
-   size(displayWidth,displayHeight,P2D);
+   size(500,500,P2D);
    if(frame!=null) frame.setResizable(true);
-<<<<<<< HEAD
-   else size(displayWidth, displayHeight, OPENGL);
-=======
->>>>>>> ea96729ede0a432274ed0776b9c1c287f1fc4d64
+   else size(displayWidth, displayHeight, P2D);
    colorMode(HSB, 1.0);
    oscP5 = new OscP5(this,12000);
 }
@@ -51,17 +45,18 @@ void draw(){
   stroke(0);
   
   // center circle
-  fill(color(centHue, 0.4, 0.7));
+  fill(color(rads%1, 0.4, 0.7, .7));
   ellipse(0, 0, szScale*(width/2.0), szScale*(width/2.0));
   
   // draw the circles
   noFill();
   for(float i=minNum; i<maxNum; i=i+0.1){
-    fill(color((circFillHue*rads)%1.0, 0.4, 0.5, circFillOp));
+    fill(color((circFillHue*rads*i)%1.0, 0.4, 0.7, circFillOp));
     ellipse(cos(rads*i*szScale)*100, sin(rads*i*szScale)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
   }
 }
 
+// osc handler
 void oscEvent(OscMessage msg){
   if(msg.checkTypetag("f")==true){
     
@@ -80,18 +75,31 @@ void oscEvent(OscMessage msg){
     else if(msg.checkAddrPattern("/cweight")==true){
       circleWeight(msg.get(0).floatValue());
     }
-    
+    else if(msg.checkAddrPattern("/bghue")==true){
+      backgroundHue(msg.get(0).floatValue());
+    }
+    else if(msg.checkAddrPattern("/centhue")==true){
+      centerCircleHue(msg.get(0).floatValue());
+    }
+    else if(msg.checkAddrPattern("/echo")==true){
+      echoAmount(msg.get(0).floatValue());
+    }
   }
 }
-
+float echoAmount(float e){
+   ech = unitClip(e);
+   println(ech);
+   return ech;
+}
+// parameters
 float minimumNumber(float m){
-    minNum = unitClip(m)*10;
+    minNum = unitClip(m);
     println(minNum);
     return minNum;
 }
 
 float maximumNumber(float m){
-    maxNum = unitClip(m)*20;
+    maxNum = unitClip(m)*5;
     println(maxNum);
     return maxNum;
 }
@@ -114,8 +122,19 @@ float circleWeight(float cw){
   return cWeight; 
 }
 
+float backgroundHue(float c){
+  bgHue = unitClip(c);
+  println(bgHue);
+  return bgHue;
+}
 
+float centerCircleHue(float c){
+  centHue = unitClip(c);
+  println(centHue);
+  return centHue;
+}
 
+// utilities
 float unitClip(float x){
   if(x<0) return 0.0;
   else if(x>1) return 1.0;

@@ -11,6 +11,7 @@ oout.dest("localhost",12000);
 
 while(min => now){
     while(min.recv(msg)){
+        // knobs
         if(nano.knobNum(msg.data2)==0){
             oout.start("/min").add(msg.data3*midiNorm).send();
             <<<"min:",msg.data3*midiNorm>>>;
@@ -30,6 +31,19 @@ while(min => now){
         else if(nano.knobNum(msg.data2)==4){
             oout.start("/cweight").add(msg.data3*midiNorm).send();
             <<<"cweight:",msg.data3*midiNorm>>>;
+        }
+        // faders
+        else if(nano.faderNum(msg.data2)==0){
+            oout.start("/bghue").add(msg.data3*midiNorm).send();
+            <<<"bghue:",msg.data3*midiNorm>>>;
+        }
+        else if(nano.faderNum(msg.data2)==1){
+            oout.start("/centhue").add(msg.data3*midiNorm).send();
+            <<<"bghue:",msg.data3*midiNorm>>>;
+        }
+        else if(nano.faderNum(msg.data2)==2){
+            oout.start("/echo").add(msg.data3*midiNorm).send();
+            <<<"bghue:",msg.data3*midiNorm>>>;
         }
     }
 }
