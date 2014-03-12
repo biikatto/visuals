@@ -25,6 +25,7 @@ float bgHue = 0.4;    //
 void setup(){
    size(500, 500, P2D);
    if(frame!=null) frame.setResizable(true);
+   else size(displayWidth,displayHeight);
    colorMode(HSB, 1.0);
    oscP5 = new OscP5(this,12000);
 }
