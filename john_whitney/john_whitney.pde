@@ -1,6 +1,8 @@
 // john whitney inspired harmonic progression
 // by Bruce Lott, march 2014
 
+// doge
+
 // import OSC libraries
 import oscP5.*;
 import netP5.*;
