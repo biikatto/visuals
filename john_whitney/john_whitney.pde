@@ -27,9 +27,12 @@ float circFillHue = 0.5;
 float circFillOp = 0.1;
 
 void setup(){
-   size(500, 500, P2D);
+   size(displayWidth,displayHeight,P2D);
    if(frame!=null) frame.setResizable(true);
+<<<<<<< HEAD
    else size(displayWidth, displayHeight, OPENGL);
+=======
+>>>>>>> ea96729ede0a432274ed0776b9c1c287f1fc4d64
    colorMode(HSB, 1.0);
    oscP5 = new OscP5(this,12000);
 }
