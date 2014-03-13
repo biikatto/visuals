@@ -14,8 +14,8 @@ float rads;
 // controllable parameters
 float stpSize = 0.7;  // rotation speed
 float szScale = 0.5;  // scale all circles 
-float minNum = 0.2;   // slowest/smallest circle
-float maxNum = 5;    // fastest/biggest circle
+int minNum = 1;   // slowest/smallest circle
+int maxNum = 10;    // fastest/biggest circle
 float cWeight = 0.75; // circles stroke weight
 float ech = 0.1;      // amount of visual echo
 float bgHue = 0.4;    // background hue
@@ -52,13 +52,13 @@ void draw(){
   // draw the circles
   noFill();
     if(forwards){
-      for(float i=minNum; i<maxNum; i=i+0.1){
+      for(int i=minNum; i<maxNum; i++){
         fill(color((circFillHue*rads*i*.5)%1.0, 0.7, 0.7, circFillOp));
         ellipse(cos(rads*i)*100, sin(rads*i)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
       }
     }
     else{
-      for(float i=maxNum; i>minNum; i=i-0.1){
+      for(int i=maxNum; i>minNum; i--){
         fill(color((circFillHue*rads*i*.5)%1.0, 0.7, 0.7, circFillOp));
         ellipse(cos(rads*i)*100, sin(rads*i)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
       }
@@ -109,13 +109,13 @@ float echoAmount(float e){
    return ech;
 }
 // parameters
-float minimumNumber(float m){
-    minNum = unitClip(m);
+int minimumNumber(float m){
+    minNum = int(unitClip(m)*40+1);
     return minNum;
 }
 
-float maximumNumber(float m){
-    maxNum = unitClip(m)*5;
+int maximumNumber(float m){
+    maxNum = int(unitClip(m)*40+1);
     return maxNum;
 }
 
@@ -125,7 +125,7 @@ float sizeScale(float s){
 }
 
 float speed(float s){
-  stpSize = unitClip(s)*2+0.0000000001;
+  stpSize = unitClip(s)+0.0000000001;
   return stpSize; 
 }
 
