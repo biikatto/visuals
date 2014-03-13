@@ -12,16 +12,17 @@ float degreeCount = 0;
 float rads;
 
 // controllable parameters
-float stpSize = 0.4;  // rotation speed
+float stpSize = 0.7;  // rotation speed
 float szScale = 0.5;  // scale all circles 
 float minNum = 0.2;   // slowest/smallest circle
-float maxNum = 10;    // fastest/biggest circle
+float maxNum = 5;    // fastest/biggest circle
 float cWeight = 0.75; // circles stroke weight
 float ech = 0.1;      // amount of visual echo
 float bgHue = 0.4;    // background hue
 float centHue = 0.2;// center circle hue
 float circFillHue = 0.5;
-float circFillOp = 0.2;
+float circFillOp = 0.15;
+boolean forwards = false;
 
 void setup(){
    size(500,500,P2D);
@@ -38,22 +39,30 @@ void draw(){
   
   // setup frame
   strokeWeight(cWeight);
-  fill(color(bgHue, 0.4, 0.7, ech));  
+  fill(color((bgHue*rads*.08)%1, 0.8, 0.5, ech));  
   noStroke(); 
   rect(0,0,width,height);
   translate(width/2.0, height/2.0);
   stroke(0);
   
   // center circle
-  fill(color(rads%1, 0.4, 0.7, .7));
+  fill(color((rads*0.25)%1, 0.7, 0.55, .7));
   ellipse(0, 0, szScale*(width/2.0), szScale*(width/2.0));
   
   // draw the circles
   noFill();
-  for(float i=minNum; i<maxNum; i=i+0.1){
-    fill(color((circFillHue*rads*i)%1.0, 0.4, 0.7, circFillOp));
-    ellipse(cos(rads*i*szScale)*100, sin(rads*i*szScale)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
-  }
+    if(forwards){
+      for(float i=minNum; i<maxNum; i=i+0.1){
+        fill(color((circFillHue*rads*i*.5)%1.0, 0.7, 0.7, circFillOp));
+        ellipse(cos(rads*i)*100, sin(rads*i)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
+      }
+    }
+    else{
+      for(float i=maxNum; i>minNum; i=i-0.1){
+        fill(color((circFillHue*rads*i*.5)%1.0, 0.7, 0.7, circFillOp));
+        ellipse(cos(rads*i)*100, sin(rads*i)*100, i*(width/10.0)*szScale, -i*(width/10.0)*szScale);
+      }
+    }
 }
 
 // osc handler
@@ -84,53 +93,54 @@ void oscEvent(OscMessage msg){
     else if(msg.checkAddrPattern("/echo")==true){
       echoAmount(msg.get(0).floatValue());
     }
+    else if(msg.checkAddrPattern("/circop")==true){
+      circleOpacity(msg.get(0).floatValue());
+    }
   }
 }
+
+float circleOpacity(float o){
+   circFillOp = unitClip(o);
+   return circFillOp; 
+}
+
 float echoAmount(float e){
    ech = unitClip(e);
-   println(ech);
    return ech;
 }
 // parameters
 float minimumNumber(float m){
     minNum = unitClip(m);
-    println(minNum);
     return minNum;
 }
 
 float maximumNumber(float m){
     maxNum = unitClip(m)*5;
-    println(maxNum);
     return maxNum;
 }
 
 float sizeScale(float s){
   szScale = unitClip(s);
-  println(szScale);
   return szScale;
 }
 
 float speed(float s){
   stpSize = unitClip(s)*2+0.0000000001;
-  println(stpSize);
   return stpSize; 
 }
 
 float circleWeight(float cw){
   cWeight = unitClip(cw);
-  println(cWeight);
   return cWeight; 
 }
 
 float backgroundHue(float c){
   bgHue = unitClip(c);
-  println(bgHue);
   return bgHue;
 }
 
 float centerCircleHue(float c){
   centHue = unitClip(c);
-  println(centHue);
   return centHue;
 }
 

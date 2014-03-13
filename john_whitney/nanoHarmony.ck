@@ -43,7 +43,11 @@ while(min => now){
         }
         else if(nano.faderNum(msg.data2)==2){
             oout.start("/echo").add(msg.data3*midiNorm).send();
-            <<<"bghue:",msg.data3*midiNorm>>>;
+            <<<"echo:",msg.data3*midiNorm>>>;
+        }
+        else if(nano.faderNum(msg.data2)==3){
+            oout.start("/circop").add(msg.data3*midiNorm).send();
+            <<<"circop:",msg.data3*midiNorm>>>;
         }
     }
 }
